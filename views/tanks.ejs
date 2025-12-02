@@ -1,0 +1,20 @@
+<%- include("head.partial.ejs") %>
+
+    <main>
+        <h1>
+            <%= data[0] %>
+        </h1>
+        <ul id="tanks">
+            <% data[1].forEach(function(tank){ %>
+                <li>
+                    <%= tank[0] %> - <%= tank[1] %>
+                </li>
+                <% }) %>
+        </ul>
+        <div>
+            <h3>New tank</h3>
+            <%- include("forms/new_tank.ejs") %>
+        </div>
+    </main>
+
+    <%- include("foot.partial.ejs") %>
