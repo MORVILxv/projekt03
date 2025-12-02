@@ -1,15 +1,17 @@
-<%- include("head.partial.ejs") %>
+<%- include("head.ejs") %>
+<body>
     <main>
         <h1>
             <p>Subsites</p>
         </h1>
         <ul>
             <li>
-                <%= mname %>
+                <a href="/all/tankmuseum"><%= mname %></a> 
             </li>
             <li>
-                <%= aname %>
+                <a href="/all/about"><%= aname %></a>
             </li>
         </ul>
     </main>
-    <%- include("foot.partial.ejs") %>
+</body>
+</html>

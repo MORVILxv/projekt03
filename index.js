@@ -32,8 +32,11 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded());
 
-app.get("/all", (req, res) => {
+app.get("/", (req, res) => {
+    res.render("none", {name: "Main"});
+})
 
+app.get("/all", (req, res) => {
     res.render("names", {
         name: "Subsites", 
         mname: getTanks()[0],
@@ -56,7 +59,7 @@ app.get("/all/tankmuseum", (req, res) => {
 app.get("/all/about", (req, res) => {
     const data = getAbout();
     if (data != null) {
-        res.render("abt", {
+        res.render("about", {
             name: "About Us", 
             data: data,
         });

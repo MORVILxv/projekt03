@@ -1,5 +1,5 @@
-<%- include("head.partial.ejs") %>
-
+<%- include("head.ejs") %>
+<body>
     <main>
         <h1>
             <%= data[0] %>
@@ -13,8 +13,17 @@
         </ul>
         <div>
             <h3>New tank</h3>
-            <%- include("forms/new_tank.ejs") %>
+            <form action="/all/tankmuseum/new" method="POST">
+                <div>
+                    <input type="text" name="country" id="country" required minlength="1" maxlength="500" placeholder="Nation"/>
+
+                    <input type="text" name="tankName" id="tankName" required minlength="1" maxlength="500" placeholder="Name"/>
+                </div>
+                <div>
+                    <button>Add tank to museum</button>
+                </div>
+            </form>
         </div>
     </main>
-
-    <%- include("foot.partial.ejs") %>
+</body>
+</html>
