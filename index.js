@@ -1,14 +1,7 @@
 import express from "express";
 import { DatabaseSync } from "node:sqlite";
 
-const db = new DatabaseSync("./db.sqlite");
-db.exec(
-    `CREATE TABLE IF NOT EXISTS tanks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    nation TEXT NOT NULL,
-    name TEXT NOT NULL
-    ) STRICT;`
-    );
+
 
 // var result = db.prepare("INSERT INTO tanks (nation, name) VALUES ('test1', 'kategoria testowa');").run();
 // console.log("Insert", result);
@@ -42,9 +35,6 @@ db.exec(
 // }
 
 
-const db_ops = {
-    insert_tank: db.prepare('INSERT INTO tanks (nation, name) VALUES (?, ?) RETURNING id, nation, name;')
-};
 
 
 
@@ -76,18 +66,10 @@ function getAbout() {
 }
 
 
-function populate() {
-    console.log("populating");
-    var len = getTanks().length;
-    for (let i = 0; i < len; i++) {
-        var tank = getTanks()[i];
-        var nation = tank[0];
-        var name = tank[1];
-        var c = db_ops.insert_tank.get(nation, name);
-        console.log("created:", c);
-    };
-}
-populate();
+
+
+
+console.dir(db_ops.sel.all(), { compact: true, depth: null });
 
 const port = 8000;
 const app = express();
