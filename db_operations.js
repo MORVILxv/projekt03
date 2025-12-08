@@ -36,7 +36,6 @@ db.exec(
     name TEXT NOT NULL
     ) STRICT; 
     CREATE TABLE IF NOT EXISTS info (
-    id INTEGER PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
     about TEXT NOT NULL
     ) STRICT;`
@@ -46,27 +45,31 @@ export const db_ops = {
     insert_tank: db.prepare('INSERT INTO tanks (nation, name) VALUES (?, ?) RETURNING id, nation, name;'),
     select_tanks: db.prepare("SELECT * FROM tanks"),
     select_tank: db.prepare('SELECT nation, name FROM tanks WHERE id = ?'),
-    insert_info: db.prepare('INSERT INTO info (id, name, about) VALUES (?, ?, ?)'),
+    insert_info: db.prepare('INSERT INTO info (name, about) VALUES (?, ?)'),
     select_info: db.prepare('SELECT * FROM info')
 };
 
-export function populate() {
-    console.log("populating");
-    var len = getTanks().length;
-    for (let i = 0; i < len; i++) {
-        var tank = getTanks()[i];
-        var nation = tank[0];
-        var name = tank[1];
-        var c = db_ops.insert_tank.get(nation, name);
-        console.log("created:", c);
-    };
+export function populate_tanks() {
+    var a = db_ops.select_tanks.get();
+    if (a == undefined) {
+        console.log("populating");
+        var len = getTanks().length;
+        for (let i = 0; i < len; i++) {
+            var tank = getTanks()[i];
+            var nation = tank[0];
+            var name = tank[1];
+            var c = db_ops.insert_tank.get(nation, name);
+            console.log("created:", c);
+        };
+    }
 }
+populate_tanks();
 
-function insert_inf() {
+function populate_about() {
     var a = db_ops.select_info.get();
     if (a == undefined) {
-        db_ops.insert_info.get(1, tankMuseum.name, about.text);
+        db_ops.insert_info.get(tankMuseum.name, about.text);
     }
 }
 
-insert_inf();
+populate_about();

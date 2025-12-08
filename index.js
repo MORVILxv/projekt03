@@ -1,6 +1,6 @@
 import express from "express";
 import { DatabaseSync } from "node:sqlite";
-import {getTankMuseumData, getTanks, addTank, getAbout, db_ops, populate} from './db_operations.js';
+import {getTankMuseumData, getTanks, addTank, getAbout, db_ops } from './db_operations.js';
 
 
 
@@ -35,7 +35,7 @@ import {getTankMuseumData, getTanks, addTank, getAbout, db_ops, populate} from '
 //   console.log(error);
 // }
 
-populate();
+
 
 
 
@@ -63,7 +63,6 @@ app.get("/all", (req, res) => {
 });
 
 app.get("/all/tankmuseum", (req, res) => {
-    //const data = getTankMuseumData();
     const a = db_ops.select_info.get().name;
     const data = db_ops.select_tanks.all();
     if (data != null) {
@@ -78,7 +77,7 @@ app.get("/all/tankmuseum", (req, res) => {
 });
 
 app.get("/all/about", (req, res) => {
-    const data = getAbout();
+    const data = db_ops.select_info.get();
     if (data != null) {
         res.render("about", {
             name: "About Us", 
@@ -90,7 +89,7 @@ app.get("/all/about", (req, res) => {
 });
 
 app.post("/all/tankmuseum/new", (req, res) => {
-    addTank(req.body.country, req.body.tankName);
+    db_ops.insert_tank.get(req.body.nation, req.body.name);
     res.redirect(`/all/tankmuseum`);
 });
 
