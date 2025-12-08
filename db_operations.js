@@ -4,9 +4,9 @@ import { isSet } from "util/types";
 const tankMuseum = {
     name: "The Great Tank Museum of Szczecin",
     tanks: [
-        ["USA", "M4A3"],
-        ["USSR", "T-34-85"], 
-        ["Germany", "Tiger H1"]
+        ["USA", "M4A3", 1],
+        ["USSR", "T-34-85", 1], 
+        ["Germany", "Tiger H1", 1]
     ]
 };
 const about = {
@@ -33,7 +33,8 @@ db.exec(
     `CREATE TABLE IF NOT EXISTS tanks (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     nation TEXT NOT NULL,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    number INTEGER DEFAULT 1
     ) STRICT; 
     CREATE TABLE IF NOT EXISTS info (
     name TEXT NOT NULL,
@@ -42,9 +43,10 @@ db.exec(
 );
 
 export const db_ops = {
-    insert_tank: db.prepare('INSERT INTO tanks (nation, name) VALUES (?, ?) RETURNING id, nation, name;'),
+    insert_tank: db.prepare('INSERT INTO tanks (nation, name, number) VALUES (?, ?, ?) RETURNING id, nation, name, number'),
     select_tanks: db.prepare("SELECT * FROM tanks"),
     select_tank: db.prepare('SELECT nation, name FROM tanks WHERE id = ?'),
+    increase_number: db.prepare('UPDATE tanks SET number = number + ? WHERE id = ?'),
     insert_info: db.prepare('INSERT INTO info (name, about) VALUES (?, ?)'),
     select_info: db.prepare('SELECT * FROM info')
 };
@@ -58,7 +60,8 @@ export function populate_tanks() {
             var tank = getTanks()[i];
             var nation = tank[0];
             var name = tank[1];
-            var c = db_ops.insert_tank.get(nation, name);
+            var number = tank[2];
+            var c = db_ops.insert_tank.get(nation, name, number);
             console.log("created:", c);
         };
     }

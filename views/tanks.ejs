@@ -7,7 +7,7 @@
         <ul id="tanks">
             <% data.forEach(function(tank){ %>
                 <li>
-                    <%= tank.nation %> - <%= tank.name %>
+                    <%= tank.nation %> - <%= tank.name %> - <%= tank.number %>
                 </li>
                 <% }) %>
         </ul>
@@ -16,8 +16,8 @@
             <form action="/all/tankmuseum/new" method="POST">
                 <div>
                     <input type="text" name="nation" id="nation" required minlength="1" maxlength="500" placeholder="Nation"/>
-
                     <input type="text" name="name" id="name" required minlength="1" maxlength="500" placeholder="Name"/>
+                    <input type="number" name="number" id="number" required minlength="1" maxlength="500" placeholder="Number" />
                 </div>
                 <div>
                     <button>Add tank to museum</button>

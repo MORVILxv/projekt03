@@ -43,6 +43,7 @@ import {getTankMuseumData, getTanks, addTank, getAbout, db_ops } from './db_oper
 
 console.dir(db_ops.select_tanks.all(), { compact: true, depth: null });
 
+
 const port = 8000;
 const app = express();
 app.set("view engine", "ejs");
@@ -89,7 +90,19 @@ app.get("/all/about", (req, res) => {
 });
 
 app.post("/all/tankmuseum/new", (req, res) => {
-    db_ops.insert_tank.get(req.body.nation, req.body.name);
+    const t = db_ops.select_tanks.all();
+    for (const tank of t) {
+        if (tank.nation == req.body.nation && tank.name == req.body.name) {
+            db_ops.increase_number.all(req.body.number, tank.id);
+            break;
+        } 
+        else {
+            db_ops.insert_tank.get(req.body.nation, req.body.name, req.body.number);
+            break;
+        }
+    }
+    
+    console.log(db_ops.select_tanks.all());
     res.redirect(`/all/tankmuseum`);
 });
 
