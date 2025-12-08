@@ -1,5 +1,6 @@
 import express from "express";
 import { DatabaseSync } from "node:sqlite";
+import {getTankMuseumData, getTanks, addTank, getAbout, db_ops, populate} from './db_operations.js';
 
 
 
@@ -34,42 +35,13 @@ import { DatabaseSync } from "node:sqlite";
 //   console.log(error);
 // }
 
+populate();
 
 
 
 
 
-
-const tankMuseum = {
-    name: "The Great Tank Museum of Szczecin",
-    tanks: [
-        ["USA", "M4A3"],
-        ["USSR", "T-34-85"], 
-        ["Germany", "Tiger H1"]
-    ]
-};
-const about = {
-    name: "About the Museum",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam fermentum suscipit magna, nec laoreet velit eleifend sed. Suspendisse et enim nibh. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum auctor varius turpis vitae consectetur. Praesent volutpat gravida nibh sit amet sodales. Ut porttitor est quis efficitur rutrum. Vestibulum ac quam euismod, elementum libero vitae, rutrum nunc. Nullam pharetra leo consequat felis tempus, sed molestie nunc iaculis. Duis efficitur imperdiet pharetra. Vestibulum in lacinia orci. Nulla et mauris sit amet elit vehicula pharetra nec quis urna. Praesent quam elit, tempor iaculis vestibulum at, sagittis vitae sapien. In aliquet augue ac porttitor dictum"
-}
-function getTankMuseumData() {
-    return [tankMuseum.name, tankMuseum.tanks];
-}
-function getTanks() {
-    return tankMuseum.tanks;
-}
-function addTank(country, tankName) {
-    tankMuseum.tanks.push([country, tankName])
-}
-function getAbout() {
-    return [about.name, about.text];
-}
-
-
-
-
-
-console.dir(db_ops.sel.all(), { compact: true, depth: null });
+console.dir(db_ops.select_tanks.all(), { compact: true, depth: null });
 
 const port = 8000;
 const app = express();
@@ -91,10 +63,13 @@ app.get("/all", (req, res) => {
 });
 
 app.get("/all/tankmuseum", (req, res) => {
-    const data = getTankMuseumData();
+    //const data = getTankMuseumData();
+    const a = db_ops.select_info.get().name;
+    const data = db_ops.select_tanks.all();
     if (data != null) {
         res.render("tanks", {
             name: "List of tanks", 
+            a: a,
             data: data,
         });
     } else {

@@ -2,12 +2,12 @@
 <body>
     <main>
         <h1>
-            <%= data[0] %>
+            <%= a %>
         </h1>
         <ul id="tanks">
-            <% data[1].forEach(function(tank){ %>
+            <% data.forEach(function(tank){ %>
                 <li>
-                    <%= tank[0] %> - <%= tank[1] %>
+                    <%= tank.nation %> - <%= tank.name %>
                 </li>
                 <% }) %>
         </ul>
