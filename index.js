@@ -63,13 +63,11 @@ app.get("/all", (req, res) => {
     })
 });
 
-app.get("/all/tankmuseum", (req, res) => {
-    const a = db_ops.select_info.get().name;
-    const data = db_ops.select_tanks.all();
+app.get("/all/about", (req, res) => {
+    const data = db_ops.select_info.get();
     if (data != null) {
-        res.render("tanks", {
-            name: "List of tanks", 
-            a: a,
+        res.render("about", {
+            name: "About Us", 
             data: data,
         });
     } else {
@@ -77,11 +75,13 @@ app.get("/all/tankmuseum", (req, res) => {
     }
 });
 
-app.get("/all/about", (req, res) => {
-    const data = db_ops.select_info.get();
+app.get("/all/tankmuseum", (req, res) => {
+    const a = db_ops.select_info.get().name;
+    const data = db_ops.select_tanks.all();
     if (data != null) {
-        res.render("about", {
-            name: "About Us", 
+        res.render("tanks", {
+            name: "List of tanks", 
+            a: a,
             data: data,
         });
     } else {
@@ -100,12 +100,42 @@ app.post("/all/tankmuseum/new", (req, res) => {
         } 
     }
     if (added == 0) {
-            db_ops.insert_tank.get(req.body.nation, req.body.name, req.body.number);
-        }
+        db_ops.insert_tank.get(req.body.nation, req.body.name, req.body.number);
+    }
     
     console.log(db_ops.select_tanks.all());
     res.redirect(`/all/tankmuseum`);
 });
+
+app.get("/all/tankmuseum/edit", (req, res) => {
+    const a = db_ops.select_info.get().name;
+    const data = db_ops.select_tanks.all();
+    if (data != null) {
+        res.render("edit", {
+            name: "List of tanks", 
+            a: a,
+            data: data,
+        });
+    } 
+    else {
+        res.sendStatus(404);
+    }
+});
+
+app.post("/all/tankmuseum/edit/new", (req, res) => {
+    const t = db_ops.select_tanks.all();
+    if (req.body.action == "delete") {
+        db_ops.delete_tank.get(req.body.id);
+    }
+    else if (req.body.action == "update") {
+        db_ops.update_tank.get(req.body.nation, req.body.name, req.body.number, req.body.id);
+    }
+    
+    console.log(db_ops.select_tanks.all());
+    res.redirect(`/all/tankmuseum/edit`);
+});
+
+
 
 app.listen(port, () => {
     console.log(`Server listening on http://localhost:${port}`);

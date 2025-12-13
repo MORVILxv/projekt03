@@ -46,6 +46,8 @@ export const db_ops = {
     insert_tank: db.prepare('INSERT INTO tanks (nation, name, number) VALUES (?, ?, ?) RETURNING id, nation, name, number'),
     select_tanks: db.prepare("SELECT * FROM tanks"),
     select_tank: db.prepare('SELECT nation, name FROM tanks WHERE id = ?'),
+    update_tank: db.prepare('UPDATE tanks SET nation = ?, name = ?, number = ? WHERE id = ?'),
+    delete_tank: db.prepare("DELETE FROM tanks WHERE id = ?"),
     increase_number: db.prepare('UPDATE tanks SET number = number + ? WHERE id = ?'),
     insert_info: db.prepare('INSERT INTO info (name, about) VALUES (?, ?)'),
     select_info: db.prepare('SELECT * FROM info')

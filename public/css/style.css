@@ -19,7 +19,7 @@ main {
     align-content: center;
 }
 
-button {
+button:not(.button_edit) {
     padding: 20px;
     background-color: rgb(93, 171, 255);
     border: none;
@@ -29,6 +29,20 @@ button {
     display: block;
 }
 
+.button_edit {
+    padding: 8px;
+    background-color: rgb(93, 171, 255);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.text_edit {
+    padding: 8px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: auto;
+}
 div {
     margin: auto;
     text-align: center;
