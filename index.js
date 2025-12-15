@@ -1,6 +1,5 @@
 import express from "express";
-import morgan from "morgan";
-import { db_ops } from './db_operations.js';
+import db_ops from './db_operations.js';
 
 const port = 2077;
 const app = express();
@@ -53,13 +52,13 @@ app.post("/all/tankmuseum/new", (req, res) => {
     let added = 0;
     for (const tank of t) {
         if (tank.nation == req.body.nation && tank.name == req.body.name) {
-            db_ops.increase_number.all(req.body.number, tank.id);
+            db_ops.increase_number.run(req.body.number, tank.id);
             added = 1;
             break;
         } 
     }
     if (added == 0) {
-        db_ops.insert_tank.get(req.body.nation, req.body.name, req.body.number);
+        db_ops.insert_tank.run(req.body.nation, req.body.name, req.body.number);
     }
     
     res.redirect('/all/tankmuseum');
@@ -68,7 +67,7 @@ app.post("/all/tankmuseum/new", (req, res) => {
 app.get("/all/tankmuseum/edit", (req, res) => {
     const a = db_ops.select_info.get().name;
     const data = db_ops.select_tanks.all();
-    if (data != null) {
+    if (data != undefined) {
         res.render("edit", {
             name: "List of tanks", 
             a: a,
@@ -83,10 +82,10 @@ app.get("/all/tankmuseum/edit", (req, res) => {
 app.post("/all/tankmuseum/edit/new", (req, res) => {
     const t = db_ops.select_tanks.all();
     if (req.body.action == "delete") {
-        db_ops.delete_tank.get(req.body.id);
+        db_ops.delete_tank.run(req.body.id);
     }
     else if (req.body.action == "update") {
-        db_ops.update_tank.get(req.body.nation, req.body.name, req.body.number, req.body.id);
+        db_ops.update_tank.run(req.body.nation, req.body.name, req.body.number, req.body.id);
     }
     
     res.redirect('/all/tankmuseum/edit');

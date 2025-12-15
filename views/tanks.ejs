@@ -15,9 +15,9 @@
             <h3>New tank</h3>
             <form action="/all/tankmuseum/new" method="POST">
                 <div>
-                    <input type="text" name="nation" id="nation" required minlength="1" maxlength="500" placeholder="Nation"/>
-                    <input type="text" name="name" id="name" required minlength="1" maxlength="500" placeholder="Name"/>
-                    <input type="number" name="number" id="number" required minlength="1" maxlength="500" placeholder="Number" />
+                    <input class="text_edit" type="text" name="nation" id="nation" required minlength="1" maxlength="500" placeholder="Nation"/>
+                    <input class="text_edit" type="text" name="name" id="name" required minlength="1" maxlength="500" placeholder="Name"/>
+                    <input class="text_edit" type="number" name="number" id="number" required minlength="1" maxlength="500" min="1" placeholder="Number" />
                 </div>
                 <div>
                     <button>Add tank to museum</button>
