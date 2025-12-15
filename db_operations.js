@@ -1,8 +1,7 @@
 import { DatabaseSync } from "node:sqlite";
-import { isSet } from "util/types";
 
 const tankMuseum = {
-    name: "The Great Tank Museum of Szczecin",
+    name: "The Great Tank Museum in Szczecin",
     tanks: [
         ["USA", "M4A3", 1],
         ["USSR", "T-34-85", 1], 
@@ -13,20 +12,6 @@ const about = {
     name: "About the Museum",
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam fermentum suscipit magna, nec laoreet velit eleifend sed. Suspendisse et enim nibh. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum auctor varius turpis vitae consectetur. Praesent volutpat gravida nibh sit amet sodales. Ut porttitor est quis efficitur rutrum. Vestibulum ac quam euismod, elementum libero vitae, rutrum nunc. Nullam pharetra leo consequat felis tempus, sed molestie nunc iaculis. Duis efficitur imperdiet pharetra. Vestibulum in lacinia orci. Nulla et mauris sit amet elit vehicula pharetra nec quis urna. Praesent quam elit, tempor iaculis vestibulum at, sagittis vitae sapien. In aliquet augue ac porttitor dictum"
 }
-export function getTankMuseumData() {
-    return [tankMuseum.name, tankMuseum.tanks];
-}
-export function getTanks() {
-    return tankMuseum.tanks;
-}
-export function addTank(country, tankName) {
-    tankMuseum.tanks.push([country, tankName])
-}
-export function getAbout() {
-    return [about.name, about.text];
-}
-
-
 
 const db = new DatabaseSync("./db.sqlite");
 db.exec(
@@ -45,36 +30,42 @@ db.exec(
 export const db_ops = {
     insert_tank: db.prepare('INSERT INTO tanks (nation, name, number) VALUES (?, ?, ?) RETURNING id, nation, name, number'),
     select_tanks: db.prepare("SELECT * FROM tanks"),
-    select_tank: db.prepare('SELECT nation, name FROM tanks WHERE id = ?'),
     update_tank: db.prepare('UPDATE tanks SET nation = ?, name = ?, number = ? WHERE id = ?'),
     delete_tank: db.prepare("DELETE FROM tanks WHERE id = ?"),
     increase_number: db.prepare('UPDATE tanks SET number = number + ? WHERE id = ?'),
     insert_info: db.prepare('INSERT INTO info (name, about) VALUES (?, ?)'),
-    select_info: db.prepare('SELECT * FROM info')
+    select_info: db.prepare('SELECT * FROM info'),
 };
 
-export function populate_tanks() {
+function populate_tanks() {
     var a = db_ops.select_tanks.get();
     if (a == undefined) {
         console.log("populating");
-        var len = getTanks().length;
+        const tanks = tankMuseum.tanks;
+        var len = tanks.length;
         for (let i = 0; i < len; i++) {
-            var tank = getTanks()[i];
+            var tank = tanks[i];
             var nation = tank[0];
             var name = tank[1];
             var number = tank[2];
-            var c = db_ops.insert_tank.get(nation, name, number);
+            var c = db_ops.insert_tank.run(nation, name, number);
             console.log("created:", c);
         };
     }
 }
-populate_tanks();
 
 function populate_about() {
     var a = db_ops.select_info.get();
     if (a == undefined) {
-        db_ops.insert_info.get(tankMuseum.name, about.text);
+        db_ops.insert_info.run(tankMuseum.name, about.text);
     }
 }
 
 populate_about();
+
+
+
+// >populate=1 node index.js żeby załadować dane testowe/przykładowe
+if (process.env.populate) {
+    populate_tanks();
+}

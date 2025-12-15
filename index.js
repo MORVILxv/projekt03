@@ -1,65 +1,24 @@
 import express from "express";
-import { DatabaseSync } from "node:sqlite";
-import {getTankMuseumData, getTanks, addTank, getAbout, db_ops } from './db_operations.js';
-
-
-
-// var result = db.prepare("INSERT INTO tanks (nation, name) VALUES ('test1', 'kategoria testowa');").run();
-// console.log("Insert", result);
-// var test_nation = result.lastInsertRowid;
-
-// try {
-//   var result = db
-//     .prepare(
-//       `INSERT INTO tanks (nation, name) VALUES ('test1', 'kategoria zduplikowana');`
-//     )
-//     .run();
-//   console.log("Insert duplicate", result);
-// } catch (error) {
-//   console.log(error);
-// }
-
-// try {
-//   var result = db.prepare(`INSERT INTO tanks (nation) VALUES ('no-name');`).run();
-//   console.log("Insert without name", result);
-// } catch (error) {
-//   console.log(error);
-// }
-
-// try {
-//   var result = db
-//     .prepare(`INSERT INTO tanks (name) VALUES ('Kategoria bez nation');`)
-//     .run();
-//   console.log("Insert without nation", result);
-// } catch (error) {
-//   console.log(error);
-// }
-
-
-
-
-
-
-
-console.dir(db_ops.select_tanks.all(), { compact: true, depth: null });
-
+import morgan from "morgan";
+import { db_ops } from './db_operations.js';
 
 const port = 2077;
 const app = express();
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded());
-
+app.use(morgan("dev"));
 
 app.get("/", (req, res) => {
     res.render("none", {name: "Main"});
 })
 
 app.get("/all", (req, res) => {
+    const mname = db_ops.select_info.get();
     res.render("names", {
         name: "Subsites", 
-        mname: getTankMuseumData()[0],
-        aname: getAbout()[0]
+        mname: mname.name,
+        aname: "About the museum"
     })
 });
 
@@ -76,12 +35,13 @@ app.get("/all/about", (req, res) => {
 });
 
 app.get("/all/tankmuseum", (req, res) => {
-    const a = db_ops.select_info.get().name;
+    const a = db_ops.select_info.get();
     const data = db_ops.select_tanks.all();
-    if (data != null) {
+    console.log("data:", data);
+    if (a != undefined) {
         res.render("tanks", {
             name: "List of tanks", 
-            a: a,
+            a: a.name,
             data: data,
         });
     } else {
@@ -103,7 +63,6 @@ app.post("/all/tankmuseum/new", (req, res) => {
         db_ops.insert_tank.get(req.body.nation, req.body.name, req.body.number);
     }
     
-    console.log(db_ops.select_tanks.all());
     res.redirect(`/all/tankmuseum`);
 });
 
@@ -131,7 +90,6 @@ app.post("/all/tankmuseum/edit/new", (req, res) => {
         db_ops.update_tank.get(req.body.nation, req.body.name, req.body.number, req.body.id);
     }
     
-    console.log(db_ops.select_tanks.all());
     res.redirect(`/all/tankmuseum/edit`);
 });
 

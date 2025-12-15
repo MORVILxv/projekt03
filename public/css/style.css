@@ -21,7 +21,8 @@ main {
 
 button:not(.button_edit) {
     padding: 20px;
-    background-color: rgb(93, 171, 255);
+    background-color: #0066EE;
+    color: white;
     border: none;
     border-radius: 15px;
     cursor: pointer;
@@ -34,7 +35,8 @@ button:not(.button_edit) {
     align-items: center;
     line-height: 10px;
     padding: 8px;
-    background-color: rgb(93, 171, 255);
+    background-color: #0066EE;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -58,4 +60,8 @@ h3 {
 ul {
     display: inline-block;
     text-align: left;
+}
+
+a {
+    color: white;
 }
