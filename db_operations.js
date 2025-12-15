@@ -5,7 +5,8 @@ const tankMuseum = {
     tanks: [
         ["USA", "M4A3", 1],
         ["USSR", "T-34-85", 1], 
-        ["Germany", "Tiger H1", 1]
+        ["Germany", "Tiger H1", 1],
+        ["NUSA", "Militech Basilisk", 1]
     ]
 };
 const about = {
@@ -38,20 +39,15 @@ export const db_ops = {
 };
 
 function populate_tanks() {
-    var a = db_ops.select_tanks.get();
-    if (a == undefined) {
-        console.log("populating");
-        const tanks = tankMuseum.tanks;
-        var len = tanks.length;
-        for (let i = 0; i < len; i++) {
-            var tank = tanks[i];
-            var nation = tank[0];
-            var name = tank[1];
-            var number = tank[2];
-            var c = db_ops.insert_tank.run(nation, name, number);
-            console.log("created:", c);
-        };
-    }
+    console.log("populating");
+    const tanks = tankMuseum.tanks;
+    tanks.forEach(tank => {
+        var nation = tank[0];
+        var name = tank[1];
+        var number = tank[2];
+        var c = db_ops.insert_tank.get(nation, name, number);
+        console.log("created:", c);
+    });
 }
 
 function populate_about() {
@@ -65,7 +61,8 @@ populate_about();
 
 
 
-// >populate=1 node index.js żeby załadować dane testowe/przykładowe
+// >populate=1 node index.js żeby załadować dane testowe/przykładowe jeśli z maszyny wirtualnej
+// jeśli z windowsa i node bez VM --->   >$env:populate=1; node index.js
 if (process.env.populate) {
     populate_tanks();
 }

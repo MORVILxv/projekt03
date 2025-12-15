@@ -7,7 +7,7 @@ const app = express();
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded());
-app.use(morgan("dev"));
+
 
 app.get("/", (req, res) => {
     res.render("none", {name: "Main"});
@@ -37,7 +37,6 @@ app.get("/all/about", (req, res) => {
 app.get("/all/tankmuseum", (req, res) => {
     const a = db_ops.select_info.get();
     const data = db_ops.select_tanks.all();
-    console.log("data:", data);
     if (a != undefined) {
         res.render("tanks", {
             name: "List of tanks", 
@@ -63,7 +62,7 @@ app.post("/all/tankmuseum/new", (req, res) => {
         db_ops.insert_tank.get(req.body.nation, req.body.name, req.body.number);
     }
     
-    res.redirect(`/all/tankmuseum`);
+    res.redirect('/all/tankmuseum');
 });
 
 app.get("/all/tankmuseum/edit", (req, res) => {
@@ -90,7 +89,7 @@ app.post("/all/tankmuseum/edit/new", (req, res) => {
         db_ops.update_tank.get(req.body.nation, req.body.name, req.body.number, req.body.id);
     }
     
-    res.redirect(`/all/tankmuseum/edit`);
+    res.redirect('/all/tankmuseum/edit');
 });
 
 
